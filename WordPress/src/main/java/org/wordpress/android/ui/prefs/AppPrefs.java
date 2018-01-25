@@ -63,15 +63,6 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
-        // aztec editor enabled
-        AZTEC_EDITOR_ENABLED,
-
-        // aztec editor toolbar expanded state
-        AZTEC_EDITOR_TOOLBAR_EXPANDED,
-
-        // visual editor enabled
-        VISUAL_EDITOR_ENABLED,
-
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
 
@@ -119,14 +110,14 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
-        // When we need to show the new editor beta snackbar
-        AZTEC_EDITOR_BETA_REQUIRED,
+        // visual editor enabled
+        VISUAL_EDITOR_ENABLED,
 
-        // When we need to show the new editor promo dialog
-        AZTEC_EDITOR_PROMO_REQUIRED,
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
 
-        // counter which determines whether it's time to show the above promo
-        AZTEC_EDITOR_PROMO_COUNTER,
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
@@ -139,9 +130,6 @@ public class AppPrefs {
 
         // When we need to sync IAP data with the wpcom backend
         IAP_SYNC_REQUIRED,
-
-        // When we need to show the Gravatar Change Promo Tooltip
-        GRAVATAR_CHANGE_PROMO_REQUIRED,
 
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
@@ -430,25 +418,25 @@ public class AppPrefs {
 
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
         AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
     }
 
     public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
     }
 
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
-        setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
         AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
@@ -464,28 +452,12 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
+        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
-
-    public static boolean isNewEditorBetaRequired() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, true);
-    }
-
-    public static boolean isNewEditorPromoRequired() {
-       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
-   }
 
     public static boolean isAsyncPromoRequired() {
         return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
     }
-
-    public static void setNewEditorBetaRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
-    }
-
-    public static void setNewEditorPromoRequired(boolean required) {
-       setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
-   }
 
     public static void setAsyncPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
@@ -499,14 +471,6 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, required);
     }
 
-    public static boolean isGravatarChangePromoRequired() {
-        return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
-    }
-
-    public static void setGravatarChangePromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, required);
-    }
-
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog
     public static void bumpAnalyticsForStatsWidgetPromo() {
         int current = getAnalyticsForStatsWidgetPromo();
@@ -515,12 +479,6 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static int bumpAndReturnAztecPromoCounter() {
-        int count = getInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER) + 1;
-        setInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER, count);
-        return count;
     }
 
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {

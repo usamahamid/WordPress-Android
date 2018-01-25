@@ -15,13 +15,14 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -33,6 +34,9 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginDetailActivity;
+import org.wordpress.android.ui.plugins.PluginListActivity;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -41,7 +45,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
@@ -140,6 +143,7 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
         }
     }
 
@@ -148,6 +152,24 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
+    }
+
+    public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
+            Intent intent = new Intent(context, PluginListActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewPluginDetail(Context context, SiteModel site, SitePluginModel plugin) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            Intent intent = new Intent(context, PluginDetailActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
+            context.startActivity(intent);
+        }
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -393,14 +415,6 @@ public class ActivityLauncher {
         }
 
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
-    public static void showAztecEditorReleaseNotes(Activity activity) {
-        Intent intent = new Intent(activity, ReleaseNotesActivity.class);
-        intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                "https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
-        intent.putExtra(ReleaseNotesActivity.KEY_HELPSHIFT_TAG, HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC);
-        activity.startActivity(intent);
     }
 
     /*

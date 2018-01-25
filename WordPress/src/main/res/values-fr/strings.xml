@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-11 09:14:04+0000
+Translation-Revision-Date: 2017-12-13 09:44:36+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="notification_login_failed">Une erreur est survenue.</string>
+	<string name="notification_2fa_needed">Veuillez fournir un code d\'authentification pour continuer. </string>
+	<string name="notification_error_wrong_password">Veuillez confirmer deux fois votre mot de passe pour continuer.</string>
+	<string name="notification_login_title_stopped">Connexion stoppée</string>
+	<string name="notification_logging_in">Veuillez patienter durant la connexion.</string>
+	<string name="notification_login_title_in_progress">Connexion en cours...</string>
+	<string name="notification_logged_in">Touchez pour continuer.</string>
+	<string name="notification_login_title_success">Connecté⋅e !</string>
+	<string name="login_error_generic_start">La connexion Google n’a pas pu démarrer.</string>
+	<string name="site_creating_success">Bravo !</string>
+	<string name="site_creating_failed">Désolé, impossible de créer correctement votre site :(</string>
+	<string name="site_creating_set_theme">Configuration du thème...</string>
+	<string name="site_creating_set_tagline">Configuration du slogan...</string>
+	<string name="site_creating_fetching_info">Récupération d’info du site...</string>
+	<string name="site_creating_label">Préparation de votre site...</string>
+	<string name="login_empty_password">Veuillez saisir un mot de passe</string>
+	<string name="email_not_registered_wpcom">Cette adresse de messagerie n’est pas enregistrée sur WordPress.com.\nEssayez vous d’accéder à un site auto-hébergé ? Connectez vous en utilisant le lien en bas de cet écran.</string>
+	<string name="login_text_otp_another">Envoyez moi un autre code à la place.</string>
+	<string name="enter_verification_code_sms">Nous envoyons un message texte au numéro de téléphone se terminant par %s. Veuillez saisir le code de vérification dans le SMS.</string>
+	<string name="error_generic_error">Impossible d’effectuer l’opération</string>
+	<string name="error_media_recover_page">Impossible de téléverser le média de cette page</string>
+	<string name="error_media_recover_post">Impossible de téléverser le média de cet article</string>
+	<string name="size_full">Taille originale</string>
+	<string name="size_large">Grande</string>
+	<string name="size_medium">Moyenne</string>
+	<string name="size_thumbnail">Miniature</string>
+	<string name="image_size">Taille</string>
+	<string name="uploading_subtitle_media_only_one">1 fichier restant</string>
+	<string name="uploading_subtitle_media_only">%1$d fichiers sur %2$d fichiers</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s restant</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, et 1 fichier restant</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, et %3$d fichiers sur %4$d restants</string>
+	<string name="uploading_title">Téléversement...</string>
+	<string name="media_files_uploaded_write_post">Écrire un article</string>
+	<string name="media_file_missing_for_retry">Nouvelle tentative impossible - Certains fichiers sont manquants sur votre appareil.</string>
+	<string name="media_all_files_uploaded_successfully">%d fichiers ont bien été téléversés</string>
+	<string name="media_files_uploaded_successfully">, %d a bien été téléversé</string>
+	<string name="media_file_uploaded">1 fichier téléversé</string>
+	<string name="media_file_not_uploaded">1 fichier non téléversé</string>
+	<string name="media_files_uploaded">%d fichiers téléversés</string>
+	<string name="media_files_not_uploaded">%d fichiers non téléversés</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s avec %3$d fichiers non téléversés</string>
+	<string name="wpcom_themes_header">Thèmes WordPress.com</string>
+	<string name="uploaded_themes_header">Thèmes téléversés</string>
+	<string name="remove_image_from_post">Retirer de l’article</string>
+	<string name="confirm_remove_media_image">Retirer cette image de l’article ?</string>
+	<string name="media_edit_customize_card_caption">Personnaliser</string>
+	<string name="media_edit_file_details_card_caption">Détails du fichier</string>
 	<string name="login_error_suffix">Essayer avec un autre compte ?</string>
 	<string name="login_error_generic">Il y a eu des problèmes avec le compte Google.</string>
 	<string name="login_error_email_not_found">Le compte Google \'%s\' ne correspond à aucun compte sur WordPress.com.</string>
@@ -57,7 +105,6 @@ Language: fr
 	<string name="media_edit_filetype_caption">Type de fichier</string>
 	<string name="media_edit_filename_caption">Nom du fichier</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">Détails du fichier</string>
 	<string name="media_edit_alttext_text">Texte alternatif</string>
 	<string name="copy">Copier</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Faire clignoter la lumière</string>
@@ -79,7 +126,6 @@ Language: fr
 	<string name="notification_settings_master_status_on">Activé</string>
 	<string name="max_video_resolution">Taille de vidéo maximale</string>
 	<string name="max_thumbnail_px_size">Taille maximale d’image</string>
-	<string name="error_media_recover_post">Nous n\'avons pas pu téléverser le contenu multimédia de cet article. Veuillez modifier l\'article et réessayer.</string>
 	<string name="error_page_does_not_exist">Cette page n\'existe plus</string>
 	<string name="error_upload_post_media_param">Une erreur est survenue lors du téléversement du contenu multimédia dans cet article : %s.</string>
 	<string name="error_upload_post_param">Une erreur est survenue lors du téléversement de cet article : %s.</string>
@@ -94,7 +140,6 @@ Language: fr
 	<string name="cant_open_url">Impossible d\'ouvrir le lien</string>
 	<string name="error_unknown_post">Article introuvable sur le serveur</string>
 	<string name="error_post_does_not_exist">Cet article n’existe plus</string>
-	<string name="error_media_recover_page">Nous n\'avons pas pu téléverser le contenu multimédia de cette page. Veuillez modifier la page et réessayer.</string>
 	<string name="error_media_canceled">Le téléversement du contenu multimédia a été annulé</string>
 	<string name="error_upload_page_media_param">Une erreur est survenue lors du téléversement du contenu multimédia dans cette page : %s.</string>
 	<string name="error_upload_page_param">Une erreur est survenue lors du chargement de cette page : %s.</string>
@@ -106,10 +151,6 @@ Language: fr
 	<string name="dialog_confirm_cancel_post_media_uploading">Êtes-vous certain-e ? Supprimer ce article supprimera aussi les médias téléversés.</string>
 	<string name="page_scheduled">Page planifiée</string>
 	<string name="post_scheduled">Article planifié</string>
-	<string name="post_draft_param">« %s » a été enregistré sous forme de brouillon !</string>
-	<string name="post_scheduled_param">« %s » a été planifié !</string>
-	<string name="post_updated_param">« %s » a été mis à jour !</string>
-	<string name="post_published_param">« %s » a été publié !</string>
 	<string name="button_retry">Réessayer</string>
 	<string name="post_queued">Article placé en file d\'attente</string>
 	<string name="connection_to_server_lost">La connexion au serveur a été perdue</string>
@@ -140,7 +181,6 @@ Language: fr
 	<string name="login_magic_links_sent_label">Votre lien magique est en route ! Vérifiez votre messagerie sur cet appareil et appuyez sur le lien dans l’e-mail reçu de WordPress.com.</string>
 	<string name="login_magic_links_label">Nous allons vous envoyer un lien magique qui vous connectera instantanément, sans mot de passe. Fini la frappe au clavier !</string>
 	<string name="password_incorrect">Il semblerait que ce mot de passe est incorrect. Veuillez vérifier et essayer à nouveau.</string>
-	<string name="email_not_registered_wpcom">Cet e-mail n’est pas enregistré sur WordPress.com.</string>
 	<string name="requesting_otp">Demande d’un code de vérification par SMS.</string>
 	<string name="login_text_otp">Envoyez-moi un code à la place.</string>
 	<string name="enter_verification_code">On y est presque ! Veuillez saisir le code de vérification de votre app d’authentification.</string>
@@ -270,11 +310,11 @@ Language: fr
 	<string name="sharing_comment_likes">Mentions J\'aime pour les commentaires</string>
 	<string name="button_style">Style de bouton</string>
 	<string name="sharing_buttons">Boutons de partage</string>
-	<string name="site_settings_like">Voir le bouton "J\'aime"</string>
+	<string name="site_settings_like">Voir le bouton \"J\'aime\"</string>
 	<string name="more_buttons">Boutons « Plus »</string>
 	<string name="label">Nom</string>
 	<string name="site_settings_reblog_and_like_header">Rebloguer et aimer</string>
-	<string name="site_settings_reblog">Voir le bouton "Rebloguer"</string>
+	<string name="site_settings_reblog">Voir le bouton \"Rebloguer\"</string>
 	<string name="publicize_text_only">Texte seulement</string>
 	<string name="publicize_icon_and_text">Icône et texte</string>
 	<string name="publicize_icon_only">Icône seulement</string>
@@ -614,9 +654,6 @@ Language: fr
 	<string name="xmlrpc_missing_method_error">Impossible de se connecter. Le serveur ne dispose pas des méthodes XML-RPC requises.</string>
 	<string name="post_format_status">État</string>
 	<string name="post_format_video">Vidéo</string>
-	<string name="theme_free">Gratuit</string>
-	<string name="theme_all">Tous</string>
-	<string name="theme_premium">Premium</string>
 	<string name="alignment_center">Centré</string>
 	<string name="post_format_gallery">Galerie</string>
 	<string name="post_format_image">Image</string>
@@ -635,9 +672,9 @@ Language: fr
 	<string name="notif_research">Recherche</string>
 	<string name="site_achievements">Accomplissements du site</string>
 	<string name="username_mentions">Mentions de l\'identifiant</string>
-	<string name="likes_on_my_posts">Mentions "J\'aime" sur mes articles</string>
+	<string name="likes_on_my_posts">Mentions \"J\'aime\" sur mes articles</string>
 	<string name="site_follows">Abonnements du site</string>
-	<string name="likes_on_my_comments">Mentions "J\'aime" sur mes commentaires</string>
+	<string name="likes_on_my_comments">Mentions \"J\'aime\" sur mes commentaires</string>
 	<string name="comments_on_my_site">Commentaires sur mon site</string>
 	<string name="site_settings_list_editor_summary_other">%d éléments</string>
 	<string name="site_settings_list_editor_summary_one">Un élément</string>
@@ -721,16 +758,16 @@ Language: fr
 	<string name="site_settings_paging_dialog_description">Scinder les fils de commentaires en pages multiples.</string>
 	<string name="site_settings_paging_dialog_header">Commentaires par page</string>
 	<string name="site_settings_close_after_dialog_title">Fermer les commentaires</string>
-	<string name="site_settings_blacklist_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera marqué en spam. Vous pouvez saisir des mots partiels, ainsi "press" correspondra à "WordPress".</string>
-	<string name="site_settings_hold_for_moderation_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera déposé dans la file de modération. Vous pouvez saisir des mots partiels, ainsi "press" correspondra à "WordPress". </string>
+	<string name="site_settings_blacklist_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera marqué en spam. Vous pouvez saisir des mots partiels, ainsi \"press\" correspondra à \"WordPress\".</string>
+	<string name="site_settings_hold_for_moderation_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera déposé dans la file de modération. Vous pouvez saisir des mots partiels, ainsi \"press\" correspondra à \"WordPress\". </string>
 	<string name="site_settings_list_editor_input_hint">Entrez un mot ou une phrase</string>
 	<string name="site_settings_list_editor_no_items_text">0 éléments</string>
 	<string name="site_settings_learn_more_caption">Vous pouvez substituer ces paramètres pour les articles individuels.</string>
-	<string name="site_settings_rp_preview3_site">dans "Mise à jour"</string>
+	<string name="site_settings_rp_preview3_site">dans \"Mise à jour\"</string>
 	<string name="site_settings_rp_preview3_title">Mise en avant de l\'option : VideoPress pour les mariages</string>
-	<string name="site_settings_rp_preview2_site">dans "Apps"</string>
+	<string name="site_settings_rp_preview2_site">dans \"Apps\"</string>
 	<string name="site_settings_rp_preview2_title">WordPress pour Android App a subi un gros lifting</string>
-	<string name="site_settings_rp_preview1_site">Dans "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">Dans \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Grosse mise à jour iPhone/iPad disponible.</string>
 	<string name="site_settings_rp_show_images_title">Afficher les images</string>
 	<string name="site_settings_rp_show_header_title">Afficher l\'en-tête</string>
@@ -856,7 +893,7 @@ Language: fr
 	<string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
 	<string name="notifications_empty_action_unread">Rallumez la conversation : écrivez un nouvel article.</string>
 	<string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
-	<string name="notifications_empty_likes">Pas (encore) de nouveaux "j\'aime" à afficher.</string>
+	<string name="notifications_empty_likes">Pas (encore) de nouveaux \"j\'aime\" à afficher.</string>
 	<string name="notifications_empty_followers">Pas (encore) de nouveaux followers.</string>
 	<string name="notifications_empty_comments">Pas (encore) de nouveaux commentaires.</string>
 	<string name="notifications_empty_unread">Vous êtes à jour!</string>
@@ -944,7 +981,7 @@ Language: fr
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
 	<string name="me_connect_to_wordpress_com">Se connecter à WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" n\'a pas été caché, c\'est le site selectionné</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" n\'a pas été caché, c\'est le site selectionné</string>
 	<string name="me_btn_support">Aide &amp; Support</string>
 	<string name="account_settings">Paramètres du compte</string>
 	<string name="site_picker_create_dotcom">Créer un site WordPress.com</string>
@@ -1173,7 +1210,7 @@ Language: fr
 	<string name="username_required">Entrez un identifiant</string>
 	<string name="username_not_allowed">L\'identifiant n\'est pas autorisé</string>
 	<string name="username_must_be_at_least_four_characters">L\'identifiant doit posséder au moins 4 caractères</string>
-	<string name="username_contains_invalid_characters">L\'identifiant ne doit pas contenir "_"</string>
+	<string name="username_contains_invalid_characters">L\'identifiant ne doit pas contenir \"_\"</string>
 	<string name="username_must_include_letters">L\'identifiant doit posséder au moins 1 caractère (a-z)</string>
 	<string name="email_invalid">Entrez une adresse e-mail valide</string>
 	<string name="nux_cannot_log_in">Nous ne pouvons pas vous connecter</string>
@@ -1194,7 +1231,7 @@ Language: fr
 	<string name="blog_name_cant_be_used">Vous ne devriez pas utiliser cette adresse</string>
 	<string name="blog_name_must_be_at_least_four_characters">L\'adresse du site doit avoir au moins 4 caractères</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">L\'adresse du site doit avoir moins de 64 caractères</string>
-	<string name="blog_name_contains_invalid_characters">L\'adresse du site ne peut pas contenir le caractère "_"</string>
+	<string name="blog_name_contains_invalid_characters">L\'adresse du site ne peut pas contenir le caractère \"_\"</string>
 	<string name="blog_name_required">Entrer une adresse de site</string>
 	<string name="blog_name_not_allowed">Cette adresse n\'est pas autorisée</string>
 	<string name="username_reserved_but_may_be_available">Cet identifiant est déjà réservé mais pourrait être disponible dans quelques jours</string>
@@ -1297,8 +1334,8 @@ Language: fr
 	<string name="error_deleting_page">Une erreur s\'est produite lors de la suppression de la page</string>
 	<string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
 	<string name="file_error_create">Impossible de créer un fichier temporaire pour le téléversement de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
-	<string name="file_not_found">Impossible de trouver le fichier pour le téléversement. Aurait-il été supprimé ou déplacé ?</string>
 	<string name="upload_failed">Téléversement échoué</string>
+	<string name="file_not_found">Impossible de trouver le fichier pour le téléverser. Aurait-il été supprimé ou déplacé ?</string>
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="deleting_post">Suppression de l\'article</string>
 	<string name="share_url_page">Partager la page</string>

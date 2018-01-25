@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-86"
-        versionCode 495
+        versionName "alpha-94"
+        versionCode 519
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -46,8 +46,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
-
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     productFlavors {
@@ -119,7 +117,10 @@ dependencies {
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
     }
-    compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
+
+    compile 'com.github.bumptech.glide:glide:4.1.1'
+    apt 'com.github.bumptech.glide:compiler:4.1.1'
+    compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3.2'
@@ -130,12 +131,6 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.squareup.okio:okio:1.13.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestCompile 'com.android.support.test:runner:1.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:passcodelock:1.5.1'
@@ -144,9 +139,11 @@ dependencies {
     compile 'com.google.dagger:dagger:2.11'
     apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:2d5ba6a8475b749ae8cb2248422610e849871caf') {
-        exclude group: "com.android.volley";
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6') {
+        exclude group: "com.android.volley"
     }
 
     compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
@@ -159,6 +156,14 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+    releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
+    }
+    debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
+    }
 
     // Debug
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
