@@ -13,9 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -57,8 +54,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleLoginListener, LoginPrologueListener, HasSupportFragmentInjector {
+public class LoginActivity extends AppCompatActivity implements Callback, LoginListener, GoogleLoginListener,
+        LoginPrologueListener, HasSupportFragmentInjector {
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -69,7 +66,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         FINISHED
     }
 
-    private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
 
     private LoginMode mLoginMode;
@@ -103,11 +99,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         } else {
             mSmartLockHelperState = SmartLockHelperState.valueOf(
                     savedInstanceState.getString(KEY_SMARTLOCK_HELPER_STATE));
-
-            if (mSmartLockHelperState != SmartLockHelperState.NOT_TRIGGERED) {
-                // reconnect SmartLockHelper
-                initSmartLockHelperConnection();
-            }
         }
     }
 
@@ -227,14 +218,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
-    private boolean initSmartLockHelperConnection() {
-        mSmartLockHelper = new SmartLockHelper(this);
-        return mSmartLockHelper.initSmartLockForPasswords();
-    }
-
     private void checkSmartLockPasswordAndStartLogin() {
         if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
-            if (initSmartLockHelperConnection()) {
+            if (SmartLockHelper.smartLockAutoFill(this, this)) {
                 mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
             } else {
                 // just shortcircuit the attempt to use SmartLockHelper
@@ -515,36 +501,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
-        mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
-                displayName, profilePicture);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        AppLog.d(AppLog.T.NUX, "Connection result: " + connectionResult);
-        mSmartLockHelperState = SmartLockHelperState.FINISHED;
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        AppLog.d(AppLog.T.NUX, "Google API client connected");
-
-        switch (mSmartLockHelperState) {
-            case NOT_TRIGGERED:
-                // should not reach this state here!
-                throw new RuntimeException("Internal inconsistency error!");
-            case TRIGGER_FILL_IN_ON_CONNECT:
-                mSmartLockHelperState = SmartLockHelperState.FINISHED;
-
-                // force account chooser
-                mSmartLockHelper.disableAutoSignIn();
-
-                mSmartLockHelper.smartLockAutoFill(this);
-                break;
-            case FINISHED:
-                // don't do anything special. We're reconnecting the GoogleApiClient on rotation.
-                break;
-        }
+        SmartLockHelper.saveCredentialsInSmartLock(this, StringUtils.notNullStr(username),
+                StringUtils.notNullStr(password), displayName, profilePicture);
     }
 
     @Override
@@ -563,11 +521,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
 
         startLogin();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
     }
 
     // GoogleLoginListener

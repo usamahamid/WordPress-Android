@@ -711,7 +711,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void saveCredentialsInSmartLock() {
-        SmartLockHelper smartLockHelper = getSmartLockHelper();
+        SmartLockHelperLegacy smartLockHelper = getSmartLockHelper();
         // mUsername and mPassword are null when the user log in with a magic link
         if (smartLockHelper != null && mUsername != null && mPassword != null) {
             smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword,
@@ -754,7 +754,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
     }
 
-    private SmartLockHelper getSmartLockHelper() {
+    private SmartLockHelperLegacy getSmartLockHelper() {
         if (getActivity() != null && getActivity() instanceof SignInActivity) {
             return ((SignInActivity) getActivity()).getSmartLockHelper();
         }

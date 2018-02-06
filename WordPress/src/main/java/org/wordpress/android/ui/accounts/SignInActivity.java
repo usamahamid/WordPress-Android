@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.accounts.SmartLockHelperLegacy.Callback;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.util.AppLog;
@@ -49,7 +49,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
-    private SmartLockHelper mSmartLockHelper;
+    private SmartLockHelperLegacy mSmartLockHelperLegacy;
     private ProgressDialog mProgressDialog;
     private SiteModel mJetpackSite;
 
@@ -83,8 +83,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
             addSignInFragment();
         }
 
-        mSmartLockHelper = new SmartLockHelper(this);
-        mSmartLockHelper.initSmartLockForPasswords();
+        mSmartLockHelperLegacy = new SmartLockHelperLegacy(this);
+        mSmartLockHelperLegacy.initSmartLockForPasswords();
 
         ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
@@ -207,8 +207,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
     }
 
-    public SmartLockHelper getSmartLockHelper() {
-        return mSmartLockHelper;
+    public SmartLockHelperLegacy getSmartLockHelper() {
+        return mSmartLockHelperLegacy;
     }
 
     private void popBackStackToSignInFragment() {
@@ -259,7 +259,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         // Autofill only if signInFragment is there and if it can be autofilled (ie. username and password fields are
         // empty).
         if (signInFragment != null && signInFragment.canAutofillUsernameAndPassword()) {
-            mSmartLockHelper.smartLockAutoFill(new Callback() {
+            mSmartLockHelperLegacy.smartLockAutoFill(new Callback() {
                 @Override
                 public void onCredentialRetrieved(Credential credential) {
                     SignInFragment signInFragment =

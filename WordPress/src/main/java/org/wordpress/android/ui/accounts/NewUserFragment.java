@@ -661,7 +661,7 @@ public class NewUserFragment extends AbstractFragment {
         }
     }
 
-    private SmartLockHelper getSmartLockHelper() {
+    private SmartLockHelperLegacy getSmartLockHelper() {
         if (getActivity() != null && getActivity() instanceof SignInActivity) {
             return ((SignInActivity) getActivity()).getSmartLockHelper();
         }
@@ -674,7 +674,7 @@ public class NewUserFragment extends AbstractFragment {
         AnalyticsUtils.refreshMetadataNewUser(getUsername(), getEmail());
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
         // Save credentials to smart lock
-        SmartLockHelper smartLockHelper = getSmartLockHelper();
+        SmartLockHelperLegacy smartLockHelper = getSmartLockHelper();
         if (smartLockHelper != null) {
             smartLockHelper.saveCredentialsInSmartLock(getUsername(), getPassword(), getUsername(), null);
         }
