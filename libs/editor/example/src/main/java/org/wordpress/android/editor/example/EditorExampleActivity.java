@@ -190,15 +190,27 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
-    public void onMediaRetryClicked(String mediaId) {
+    public boolean onMediaRetryClicked(String mediaId) {
         if (mFailedUploads.containsKey(mediaId)) {
             simulateFileUpload(mediaId, mFailedUploads.get(mediaId));
         }
+
+        return true;
     }
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId) {
 
+    }
+
+    @Override
+    public void onMediaDeleted(String mediaId) {
+        // TODO
+    }
+
+    @Override
+    public void onUndoMediaCheck(String undoedContent) {
+        // TODO
     }
 
     @Override
