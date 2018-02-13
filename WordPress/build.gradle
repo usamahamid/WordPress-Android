@@ -79,6 +79,21 @@ android {
     }
 }
 
+//RtlHardcoded check covers multiple issue, and minSdkVersion 21 in wasabi build triggers redundant layout direction
+//attribute check. This part can be removed when minSdkVersion will be set to 17 and redundant attributes like
+//layout_marginRight/left, paddingRight/Left will be removed.
+tasks.whenTaskAdded { task ->
+    if (task.name == "lintWasabiDebug" || task.name == "lintWasabiRelease") {
+        task.doFirst {
+            android.lintOptions.ignore('RtlHardcoded')
+        }
+    } else {
+        task.doFirst {
+            android.lintOptions.error('RtlHardcoded')
+        }
+    }
+}
+
 dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
