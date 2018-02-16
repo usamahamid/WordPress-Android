@@ -61,7 +61,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
     }
 
