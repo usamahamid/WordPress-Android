@@ -601,22 +601,17 @@ public class EditPostSettingsFragment extends Fragment {
         final Calendar calendar = getCurrentPublishDateAsCalendar();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                                                                       new TimePickerDialog.OnTimeSetListener() {
-                                                                           @Override
-                                                                           public void onTimeSet(TimePicker timePicker,
-                                                                                                 int selectedHour,
-                                                                                                 int selectedMinute) {
-                                                                               Calendar selectedCalendar =
-                                                                                       Calendar.getInstance();
-                                                                               selectedCalendar
-                                                                                       .set(selectedYear, selectedMonth,
-                                                                                            selectedDay, selectedHour,
-                                                                                            selectedMinute);
-                                                                               updatePublishDate(selectedCalendar);
-                                                                           }
-                                                                       }, hour, minute,
-                                                                       DateFormat.is24HourFormat(getActivity()));
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(
+                getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+                        updatePublishDate(selectedCalendar);
+                    }
+                },
+                hour, minute, DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
