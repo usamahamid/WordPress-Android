@@ -28,7 +28,7 @@
             android:horizontalSpacing="@dimen/margin_none"
             android:numColumns="auto_fit"
             android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="columnWidth"></org.wordpress.android.widgets.HeaderGridView>
+            android:stretchMode="columnWidth" />
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <RelativeLayout

@@ -54,6 +54,10 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
+import org.wordpress.aztec.Aztec;
+import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.toolbar.AztecToolbar;
+import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +68,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class ReaderCommentListActivity extends AppCompatActivity {
+public class ReaderCommentListActivity extends AppCompatActivity implements IAztecToolbarClickListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
@@ -78,6 +82,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
+    private AztecToolbar mAztecToolbar;
     private View mSubmitReplyBtn;
     private ViewGroup mCommentBox;
 
@@ -156,6 +161,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
+
+        mAztecToolbar = findViewById(R.id.formatting_toolbar);
+        Aztec.with(mEditComment, mAztecToolbar, this);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -596,7 +604,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * submit the text typed into the comment box as a comment on the current post
      */
     private void submitComment() {
-        final String commentText = EditTextUtils.getText(mEditComment);
+        final String commentText = mEditComment.toPlainHtml(false);
         if (TextUtils.isEmpty(commentText)) {
             return;
         }
@@ -684,5 +692,33 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
             mUpdateOnResume = true;
         }
+    }
+
+    @Override public void onToolbarCollapseButtonClicked() {
+
+    }
+
+    @Override public void onToolbarExpandButtonClicked() {
+
+    }
+
+    @Override public void onToolbarFormatButtonClicked(ITextFormat iTextFormat, boolean b) {
+
+    }
+
+    @Override public void onToolbarHeadingButtonClicked() {
+
+    }
+
+    @Override public void onToolbarHtmlButtonClicked() {
+
+    }
+
+    @Override public void onToolbarListButtonClicked() {
+
+    }
+
+    @Override public boolean onToolbarMediaButtonClicked() {
+        return false;
     }
 }

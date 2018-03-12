@@ -11,6 +11,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:visibility="gone"
+    xmlns:aztec="http://schemas.android.com/apk/res-auto"
     tools:visibility="visible">
 
     <View
@@ -19,10 +20,17 @@
         android:layout_height="1dp"
         android:background="@color/grey_lighten_20" />
 
+    <org.wordpress.aztec.toolbar.AztecToolbar
+        android:id="@+id/formatting_toolbar"
+        android:layout_below="@id/divider_comment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/aztec_format_bar_height" />
+
     <LinearLayout
         android:id="@+id/reply_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/formatting_toolbar"
         android:orientation="horizontal">
 
         <ImageView
@@ -53,7 +61,27 @@
             android:paddingTop="@dimen/margin_extra_small"
             android:textColorHint="@color/grey_lighten_10"
             android:textSize="@dimen/text_sz_large"
-            android:paddingStart="@dimen/margin_small"/>
+            android:paddingStart="@dimen/margin_small"
+            aztec:bulletColor="@color/bullet"
+            aztec:bulletMargin="@dimen/bullet_margin"
+            aztec:bulletPadding="@dimen/bullet_padding"
+            aztec:bulletWidth="@dimen/bullet_width"
+            aztec:codeBackground="@color/code_background"
+            aztec:codeColor="@color/code"
+            aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
+            aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
+            aztec:historyEnable="true"
+            aztec:historySize="10"
+            aztec:linkColor="@color/link"
+            aztec:linkUnderline="true"
+            aztec:quoteBackground="@color/quote_background"
+            aztec:quoteColor="@color/quote"
+            aztec:quoteMargin="@dimen/quote_margin"
+            aztec:quotePadding="@dimen/quote_padding"
+            aztec:quoteWidth="@dimen/quote_width"
+            aztec:textColor="@color/text"
+            aztec:textColorHint="@color/hint_text"
+            />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/btn_submit_reply"

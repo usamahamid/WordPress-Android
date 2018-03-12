@@ -13,9 +13,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
+import org.wordpress.aztec.AztecText;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
-public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
+public class SuggestionAutoCompleteText extends AztecText {
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
 

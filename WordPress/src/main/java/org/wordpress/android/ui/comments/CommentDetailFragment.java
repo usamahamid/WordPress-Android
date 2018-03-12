@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -33,6 +36,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.MediaToolbarAction;
+import org.wordpress.android.editor.MediaToolbarCameraButton;
+import org.wordpress.android.editor.MediaToolbarGalleryButton;
+import org.wordpress.android.editor.MediaToolbarLibraryButton;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
@@ -56,6 +64,7 @@ import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListe
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -78,6 +87,11 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.aztec.Aztec;
+import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.plugins.IMediaToolbarButton;
+import org.wordpress.aztec.toolbar.AztecToolbar;
+import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -91,7 +105,7 @@ import de.greenrobot.event.EventBus;
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  */
-public class CommentDetailFragment extends Fragment implements NotificationFragment {
+public class CommentDetailFragment extends Fragment implements NotificationFragment, IAztecToolbarClickListener {
     private static final String KEY_MODE = "KEY_MODE";
     private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -133,6 +147,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
+
+    private AztecToolbar mAztecToolbar;
+    private MediaToolbarAction.MediaToolbarButtonClickListener mMediaToolbarButtonClickListener;
+    private org.wordpress.aztec.Html.ImageGetter mAztecImageLoader;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -268,6 +286,59 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
         setReplyUniqueId();
+
+        Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                getActivity(),
+                org.wordpress.android.editor.R.drawable.ic_gridicons_image,
+                512);
+
+        mAztecImageLoader = new AztecImageLoader(getActivity(), loadingImagePlaceholder);
+        mAztecToolbar = mLayoutReply.findViewById(R.id.formatting_toolbar);
+
+        MediaToolbarGalleryButton mediaToolbarGalleryButton = new MediaToolbarGalleryButton(mAztecToolbar);
+        mediaToolbarGalleryButton.setMediaToolbarButtonClickListener(
+                new IMediaToolbarButton.IMediaToolbarClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mMediaToolbarButtonClickListener != null) {
+                            mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.GALLERY);
+                        }
+                    }
+                });
+
+        MediaToolbarCameraButton mediaToolbarCameraButton = new MediaToolbarCameraButton(mAztecToolbar);
+        mediaToolbarCameraButton.setMediaToolbarButtonClickListener(
+                new IMediaToolbarButton.IMediaToolbarClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mMediaToolbarButtonClickListener != null) {
+                            mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA);
+                        }
+                    }
+                });
+
+        MediaToolbarLibraryButton mediaToolbarLibraryButton = new MediaToolbarLibraryButton(mAztecToolbar);
+        mediaToolbarLibraryButton.setMediaToolbarButtonClickListener(
+                new IMediaToolbarButton.IMediaToolbarClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mMediaToolbarButtonClickListener != null) {
+                            mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.LIBRARY);
+                        }
+                    }
+                });
+
+        mAztecToolbar.findViewById(R.id.format_bar_button_html).setVisibility(View.INVISIBLE);
+        mAztecToolbar.findViewById(R.id.format_bar_button_list).setVisibility(View.INVISIBLE);
+        mAztecToolbar.findViewById(R.id.format_bar_button_align_center).setVisibility(View.INVISIBLE);
+        mAztecToolbar.findViewById(R.id.format_bar_button_align_left).setVisibility(View.INVISIBLE);
+        mAztecToolbar.findViewById(R.id.format_bar_button_align_right).setVisibility(View.INVISIBLE);
+
+        Aztec.with(mEditReply, mAztecToolbar, this)
+            .setImageGetter(mAztecImageLoader)
+            .addPlugin(mediaToolbarGalleryButton)
+            .addPlugin(mediaToolbarCameraButton)
+            .addPlugin(mediaToolbarLibraryButton);
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
@@ -872,7 +943,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        final String replyText = EditTextUtils.getText(mEditReply);
+        final String replyText = mEditReply.toPlainHtml(false);
         if (TextUtils.isEmpty(replyText)) {
             return;
         }
@@ -1262,5 +1333,33 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
             return;
         }
+    }
+
+    @Override public void onToolbarCollapseButtonClicked() {
+
+    }
+
+    @Override public void onToolbarExpandButtonClicked() {
+
+    }
+
+    @Override public void onToolbarFormatButtonClicked(ITextFormat iTextFormat, boolean b) {
+
+    }
+
+    @Override public void onToolbarHeadingButtonClicked() {
+
+    }
+
+    @Override public void onToolbarHtmlButtonClicked() {
+
+    }
+
+    @Override public void onToolbarListButtonClicked() {
+
+    }
+
+    @Override public boolean onToolbarMediaButtonClicked() {
+        return false;
     }
 }
