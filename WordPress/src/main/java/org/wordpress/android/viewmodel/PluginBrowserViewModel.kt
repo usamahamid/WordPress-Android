@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.models.networkresource.ListNetworkResource
+import org.wordpress.android.models.networkresource.ListStateLiveDataDelegate
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -40,14 +41,12 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private val handler = Handler()
 
-    private val _featuredPluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _popularPluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _newPluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _sitePluginsLiveData = MutableLiveData<PluginListNetworkResource>()
     private val _searchResultsLiveData = MutableLiveData<PluginListNetworkResource>()
 
-    val featuredPluginsLiveData: LiveData<PluginListNetworkResource>
-        get() = _featuredPluginsLiveData
+    val featuredPluginsLiveData = ListStateLiveDataDelegate<ImmutablePluginModel>()
 
     val popularPluginsLiveData: LiveData<PluginListNetworkResource>
         get() = _popularPluginsLiveData
@@ -61,10 +60,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     val searchResultsLiveData: LiveData<PluginListNetworkResource>
         get() = _searchResultsLiveData
 
-    private var featuredPlugins: ListNetworkResource<ImmutablePluginModel>
-            by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
-                _featuredPluginsLiveData.postValue(new)
-            }
+    private var featuredPlugins: ListNetworkResource<ImmutablePluginModel> by featuredPluginsLiveData
+
     private var popularPlugins: ListNetworkResource<ImmutablePluginModel>
             by Delegates.observable(ListNetworkResource.Init()) { _, _, new ->
                 _popularPluginsLiveData.postValue(new)
