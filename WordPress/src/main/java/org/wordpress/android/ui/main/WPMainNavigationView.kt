@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main
 import android.annotation.SuppressLint
 import android.app.Fragment
 import android.app.FragmentManager
+import android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -20,7 +21,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.TextView
-
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.notifications.NotificationsListFragment
@@ -30,10 +30,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-
-import java.lang.reflect.Field
-
-import android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -46,27 +42,27 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     private var mListener: OnPageListener? = null
     private var mPrevPosition = -1
 
-    internal val activeFragment: Fragment?
+    val activeFragment: Fragment?
         get() = mNavAdapter!!.getFragment(currentPosition)
 
-    internal var currentPosition: Int
+    var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
         set(position) = setCurrentPosition(position, true)
 
-    internal interface OnPageListener {
+    interface OnPageListener {
         fun onPageChanged(position: Int)
         fun onNewPostButtonClicked()
     }
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    internal fun init(fm: FragmentManager, listener: OnPageListener) {
+    fun init(fm: FragmentManager, pageListener: OnPageListener) {
         mFragmentManager = fm
-        mListener = listener
+        mListener = pageListener
 
         mNavAdapter = NavAdapter()
         assignNavigationListeners(true)
@@ -251,7 +247,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         }
     }
 
-    internal fun getTitleForPosition(position: Int): CharSequence {
+    fun getTitleForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int
         when (position) {
             PAGE_MY_SITE -> idRes = R.string.my_site_section_screen_title
@@ -263,7 +259,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         return context.getString(idRes)
     }
 
-    internal fun getContentDescriptionForPosition(position: Int): CharSequence {
+    fun getContentDescriptionForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int
         when (position) {
             PAGE_MY_SITE -> idRes = R.string.tabbar_accessibility_label_my_site
@@ -295,7 +291,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         }
     }
 
-    internal fun getFragment(position: Int): Fragment? {
+    fun getFragment(position: Int): Fragment? {
         return mNavAdapter!!.getFragment(position)
     }
 
@@ -310,7 +306,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     /*
      * show or hide the badge on the notification page
      */
-    internal fun showNoteBadge(showBadge: Boolean) {
+    fun showNoteBadge(showBadge: Boolean) {
         val notifView = getItemView(PAGE_NOTIFS)
         val badgeView = notifView!!.findViewById<View>(R.id.badge)
 
@@ -328,7 +324,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     }
 
     private fun isValidPosition(position: Int): Boolean {
-        return position >= 0 && position < NUM_PAGES
+        return position in 0..(NUM_PAGES - 1)
     }
 
     private inner class NavAdapter {
@@ -358,7 +354,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     }
 
     companion object {
-        private val NUM_PAGES = 5
+        private const val NUM_PAGES = 5
 
         const val PAGE_MY_SITE = 0
         const val PAGE_READER = 1
