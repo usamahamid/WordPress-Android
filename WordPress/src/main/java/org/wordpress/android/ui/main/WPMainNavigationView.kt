@@ -361,4 +361,3 @@ class WPMainNavigationView : BottomNavigationView,
         internal const val PAGE_NOTIFS = 4
     }
 }
-
