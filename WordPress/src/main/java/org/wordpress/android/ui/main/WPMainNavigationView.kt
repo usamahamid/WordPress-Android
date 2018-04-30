@@ -37,13 +37,13 @@ import org.wordpress.android.util.AppLog.T
  * insert our own custom views so we have more control over their appearance
  */
 class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
-    private var mNavAdapter: NavAdapter? = null
-    private var mFragmentManager: FragmentManager? = null
-    private var mListener: OnPageListener? = null
-    private var mPrevPosition = -1
+    private var navAdapter: NavAdapter? = null
+    private var fragmentManager: FragmentManager? = null
+    private var listener: OnPageListener? = null
+    private var prevPosition = -1
 
     val activeFragment: Fragment?
-        get() = mNavAdapter!!.getFragment(currentPosition)
+        get() = navAdapter!!.getFragment(currentPosition)
 
     var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -61,10 +61,10 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun init(fm: FragmentManager, pageListener: OnPageListener) {
-        mFragmentManager = fm
-        mListener = pageListener
+        fragmentManager = fm
+        listener = pageListener
 
-        mNavAdapter = NavAdapter()
+        navAdapter = NavAdapter()
         assignNavigationListeners(true)
         disableShiftMode()
 
@@ -130,7 +130,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             false
         } else {
             setCurrentPosition(position, false)
-            mListener!!.onPageChanged(position)
+            listener!!.onPageChanged(position)
             true
         }
     }
@@ -146,7 +146,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                mListener!!.onNewPostButtonClicked()
+                listener!!.onNewPostButtonClicked()
             }
 
             override fun onAnimationRepeat(animation: Animation) {
@@ -159,7 +159,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
         if (position != PAGE_NEW_POST) {
-            val fragment = mNavAdapter!!.getFragment(position)
+            val fragment = navAdapter!!.getFragment(position)
             if (fragment is OnScrollToTopListener) {
                 (fragment as OnScrollToTopListener).onScrollToTop()
             }
@@ -194,9 +194,9 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         }
 
         // remove the title and selected state from the previously selected item
-        if (mPrevPosition > -1) {
-            showTitleForPosition(mPrevPosition, false)
-            setImageViewSelected(mPrevPosition, false)
+        if (prevPosition > -1) {
+            showTitleForPosition(prevPosition, false)
+            setImageViewSelected(prevPosition, false)
         }
 
         // set the title and selected state from the newly selected item
@@ -204,7 +204,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
         setImageViewSelected(position, true)
 
         AppPrefs.setMainPageIndex(position)
-        mPrevPosition = position
+        prevPosition = position
 
         if (ensureSelected) {
             // temporarily disable the nav listeners so they don't fire when we change the selected page
@@ -216,9 +216,9 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             }
         }
 
-        val fragment = mNavAdapter!!.getFragment(position)
+        val fragment = navAdapter!!.getFragment(position)
         if (fragment != null) {
-            mFragmentManager!!
+            fragmentManager!!
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .setTransition(TRANSIT_FRAGMENT_FADE)
@@ -290,7 +290,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     }
 
     fun getFragment(position: Int): Fragment? {
-        return mNavAdapter!!.getFragment(position)
+        return navAdapter!!.getFragment(position)
     }
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
@@ -353,11 +353,11 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
     companion object {
         private const val NUM_PAGES = 5
 
-        const val PAGE_MY_SITE = 0
-        const val PAGE_READER = 1
-        const val PAGE_NEW_POST = 2
-        const val PAGE_ME = 3
-        const val PAGE_NOTIFS = 4
+        internal const val PAGE_MY_SITE = 0
+        internal const val PAGE_READER = 1
+        internal const val PAGE_NEW_POST = 2
+        internal const val PAGE_ME = 3
+        internal const val PAGE_NOTIFS = 4
     }
 }
 
