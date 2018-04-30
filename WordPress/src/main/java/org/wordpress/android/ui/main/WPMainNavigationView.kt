@@ -5,6 +5,7 @@ import android.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import android.content.Context
+import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
@@ -13,6 +14,7 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -111,9 +113,7 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
                 // force the view to update
                 item.setChecked(item.itemData.isChecked)
             }
-        } catch (e: NoSuchFieldException) {
-            AppLog.e(T.MAIN, "Unable to disable shift mode", e)
-        } catch (e: IllegalAccessException) {
+        } catch (e: Exception) {
             AppLog.e(T.MAIN, "Unable to disable shift mode", e)
         }
     }
@@ -144,11 +144,9 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
             override fun onAnimationStart(animation: Animation) {
                 // noop
             }
-
             override fun onAnimationEnd(animation: Animation) {
                 listener!!.onNewPostButtonClicked()
             }
-
             override fun onAnimationRepeat(animation: Animation) {
                 // noop
             }
@@ -232,7 +230,8 @@ class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListe
      * will have no effect
      */
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        val color = resources.getColor(if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
+        @ColorRes val colorRes: Int = if (isSelected) R.color.blue_medium else R.color.grey_lighten_10
+        val color = ContextCompat.getColor(context, colorRes)
         getImageViewForPosition(position).setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
     }
 
