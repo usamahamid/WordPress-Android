@@ -38,7 +38,9 @@ import org.wordpress.android.util.AppLog.T
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
-class WPMainNavigationView : BottomNavigationView, OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+class WPMainNavigationView : BottomNavigationView,
+        OnNavigationItemSelectedListener,
+        OnNavigationItemReselectedListener {
     private var navAdapter: NavAdapter? = null
     private var fragmentManager: FragmentManager? = null
     private var listener: OnPageListener? = null
