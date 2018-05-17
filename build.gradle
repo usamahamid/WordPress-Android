@@ -66,13 +66,33 @@ subprojects {
         ktlint 'com.github.shyiko:ktlint:0.21.0'
     }
 
+    def inputFiles = project.fileTree(dir: "src", include: "**/*.kt")
+    def outputDir = "${project.buildDir}/reports/ktlint/"
+
+    task ktlintChanged(type: JavaExec) {
+        def files = getChangedFiles()
+        println project.name + ": " + files
+        inputs.files(files)
+        outputs.dir(outputDir)
+
+        main = "com.github.shyiko.ktlint.Main"
+        classpath = configurations.ktlint
+        args "src/**/*.kt"
+    }
+
     task ktlint(type: JavaExec) {
+        inputs.files(inputFiles)
+        outputs.dir(outputDir)
+
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt"
     }
 
     task ktlintFormat(type: JavaExec) {
+        inputs.files(inputFiles)
+        outputs.dir(outputDir)
+
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
