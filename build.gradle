@@ -109,7 +109,7 @@ static def getChangedFiles() {
     def ghprbSourceBranch = System.getenv("ghprbSourceBranch")
 
     // Compare to develop if no branch specified
-    def targetBranch = ghprbTargetBranch ? "origin/${ghprbTargetBranch}" : "develop"
+    def targetBranch = ghprbTargetBranch ? "origin/${ghprbTargetBranch}" : "origin/develop"
     def sourceBranch = ghprbSourceBranch ? "origin/${ghprbSourceBranch}" : ""
 
     // Get list of all changed files including status
