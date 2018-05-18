@@ -51,6 +51,7 @@ public class PluginListFragment extends Fragment {
 
     private static final String ARG_LIST_TYPE = "list_type";
 
+
     protected PluginBrowserViewModel mViewModel;
 
     protected RecyclerView mRecycler;

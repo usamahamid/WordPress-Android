@@ -24,6 +24,7 @@ class ListStateTest {
         val readyState: ListState<String> = ListState.Ready(testData)
 
         assertThat(readyState.data, `is`(equalTo(testData)))
+        
 
         assertThat(readyState.isFetchingFirstPage(), `is`(false))
         assertThat(readyState.isLoadingMore(), `is`(false))
