@@ -27,6 +27,10 @@ env:
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
 
+before_install:
+# Get a master branch for conventional-changelog-lint
+  - git remote set-branches origin develop && git fetch
+
 install:
   # Setup gradle.properties
   - cp gradle.properties-example gradle.properties
