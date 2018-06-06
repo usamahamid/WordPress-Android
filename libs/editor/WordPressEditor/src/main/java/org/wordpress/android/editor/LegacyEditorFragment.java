@@ -128,7 +128,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public CharSequence getContent() {
+    public CharSequence getContent(CharSequence originalContent) {
         if (mContentEditText != null) {
             return mContentEditText.getText().toString();
         }
@@ -1196,10 +1196,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     @Override
     public boolean hasFailedMediaUploads() {
         return false;
-    }
-
-    @Override public boolean shouldLoadContentFromEditor() {
-        return true;
     }
 
     @Override
