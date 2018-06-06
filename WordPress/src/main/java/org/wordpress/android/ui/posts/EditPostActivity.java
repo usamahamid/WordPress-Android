@@ -1258,8 +1258,14 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                        (String) mEditorFragment.getContent());
+                final String newContent;
+                if (mEditorFragment.shouldLoadContentFromEditor()) {
+                    newContent = (String) mEditorFragment.getContent();
+                } else {
+                    newContent = mPost.getContent();
+                }
+                postTitleOrContentChanged =
+                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(), newContent);
             } else {
                 // TODO: Remove when legacy editor is dropped
                 postTitleOrContentChanged = updatePostContent(isAutosave);

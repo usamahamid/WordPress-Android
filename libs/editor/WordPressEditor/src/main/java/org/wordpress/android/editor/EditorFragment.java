@@ -1097,6 +1097,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         return (mFailedMediaIds.size() > 0);
     }
 
+    @Override public boolean shouldLoadContentFromEditor() {
+       return true;
+    }
+
     @Override
     public void removeAllFailedMediaUploads() {
         mWebView.execJavaScriptFromString("ZSSEditor.removeAllFailedMediaUploads();");
