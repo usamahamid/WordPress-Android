@@ -52,9 +52,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.18.1'
 
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:try~has-changes-take-two-SNAPSHOT')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:try~has-changes-take-two-SNAPSHOT')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:try~has-changes-take-two-SNAPSHOT')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:571cc2f08f3963d4c8cb1a3420c4cc34f09b4369')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:571cc2f08f3963d4c8cb1a3420c4cc34f09b4369')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:571cc2f08f3963d4c8cb1a3420c4cc34f09b4369')
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
