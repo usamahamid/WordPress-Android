@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -115,6 +116,7 @@ public class MySiteFragment extends Fragment implements
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
     private LinearLayout mActivityLogContainer;
+    private LinearLayout mQuickStartContainer;
     private WPTextView mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -141,6 +143,7 @@ public class MySiteFragment extends Fragment implements
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject SiteStore mSiteStore;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -223,6 +226,7 @@ public class MySiteFragment extends Fragment implements
         mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
+        mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
         mQuickStartCounter = rootView.findViewById(R.id.my_site_quick_start_progress);
         mQuickStartDot = rootView.findViewById(R.id.my_site_quick_start_dot);
 
@@ -389,7 +393,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        setupQuickStartRow(rootView);
+
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
@@ -397,15 +401,15 @@ public class MySiteFragment extends Fragment implements
         return rootView;
     }
 
-    private void setupQuickStartRow(final View rootView) {
-        if (AppPrefs.isQuickStartActive()) {
-            rootView.findViewById(R.id.row_quick_start).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+    private void setupQuickStartRow() {
+        if (!AppPrefs.isQuickStartDisabled() && AppPrefs.isQuickStartActive()) {
+            mQuickStartContainer.findViewById(R.id.row_quick_start).setVisibility(View.VISIBLE);
+            mQuickStartContainer.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mQuickStartDot.getVisibility() == View.VISIBLE) {
                         AppPrefs.setQuickStartActive(false);
-                        rootView.findViewById(R.id.row_quick_start).setVisibility(View.GONE);
+                        mQuickStartContainer.setVisibility(View.GONE);
                     }
 
                     ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -413,6 +417,11 @@ public class MySiteFragment extends Fragment implements
             });
 
             updateQuickStartCounter();
+
+            if (mActiveQuickStartTask != null) {
+                addQuickStartFocusPoint();
+                focusOnQuickStartRow();
+            }
         }
     }
 
@@ -420,10 +429,7 @@ public class MySiteFragment extends Fragment implements
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (mActiveQuickStartTask != null) {
-            addQuickStartFocusPoint();
-            focusOnQuickStartRow();
-        }
+
     }
 
     private void updateQuickStartCounter() {
@@ -597,6 +603,8 @@ public class MySiteFragment extends Fragment implements
      * - After first site, show Quick Start on Sites only.
      */
     public void checkQuickStart() {
+        setupQuickStartRow();
+
         // TODO: Skip check if user opted out of Quick Start.
         // TODO: Show prompt based on site number, checklist progress, and prompt number.
     }
@@ -863,7 +871,7 @@ public class MySiteFragment extends Fragment implements
                 // no-op
                 break;
             case TAG_QUICK_START_DIALOG:
-                // TODO: Go to Quick Start checklist.
+                ActivityLauncher.viewQuickStartForResult(getActivity());
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -894,7 +902,8 @@ public class MySiteFragment extends Fragment implements
     public void onNeutralClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_QUICK_START_DIALOG:
-                // TODO: Set preference to never show Quick Start dialog and checklist.
+                AppPrefs.setQuickStartDisabled(true);
+                mQuickStartContainer.setVisibility(View.GONE);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");

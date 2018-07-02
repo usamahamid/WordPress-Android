@@ -160,7 +160,10 @@ public class AppPrefs {
         LAST_WP_COM_THEMES_SYNC,
 
         // user id last used to login with
-        LAST_USED_USER_ID
+        LAST_USED_USER_ID,
+
+        // used to indicate that user opted out of quick start
+        IS_QUICK_START_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -458,7 +461,7 @@ public class AppPrefs {
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
-                                                       !isAztecEditorEnabled());
+                !isAztecEditorEnabled());
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -709,5 +712,13 @@ public class AppPrefs {
     // TODO quick start is set to true by default for testing purposes. Remove in prod.
     public static boolean isQuickStartActive() {
         return getBoolean(DeletablePrefKey.IS_QUICK_START_ACTIVE, true);
+    }
+
+    public static void setQuickStartDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
+    }
+
+    public static boolean isQuickStartDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, true);
     }
 }
