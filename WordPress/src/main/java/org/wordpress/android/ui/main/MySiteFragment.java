@@ -403,7 +403,6 @@ public class MySiteFragment extends Fragment implements
             rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (mQuickStartDot.getVisibility() == View.VISIBLE) {
                         AppPrefs.setQuickStartActive(false);
                         rootView.findViewById(R.id.row_quick_start).setVisibility(View.GONE);
