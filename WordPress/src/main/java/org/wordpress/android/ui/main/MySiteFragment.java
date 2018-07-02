@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
@@ -125,6 +126,9 @@ public class MySiteFragment extends Fragment implements
     private SiteSettingsInterface mSiteSettings;
     private MySiteTutorialPrompts mActiveQuickStartTask;
     private WPDialogSnackbar mQuickStartSnackbar;
+    private TextView mQuickStartCounter;
+    private View mQuickStartDot;
+
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -219,6 +223,8 @@ public class MySiteFragment extends Fragment implements
         mNoSiteDrakeImageView = rootView.findViewById(R.id.my_site_no_site_view_drake);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
+        mQuickStartCounter = rootView.findViewById(R.id.my_site_quick_start_progress);
+        mQuickStartDot = rootView.findViewById(R.id.my_site_quick_start_dot);
 
         rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,13 +247,6 @@ public class MySiteFragment extends Fragment implements
                     completeActiveQuickStartTask();
                 }
                 ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
-            }
-        });
-
-        rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewQuickStartForResult(getActivity());
             }
         });
 
@@ -390,6 +389,24 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
+        if (AppPrefs.isQuickStartActive()) {
+            rootView.findViewById(R.id.row_quick_start).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (mQuickStartDot.getVisibility() == View.VISIBLE) {
+                        AppPrefs.setQuickStartActive(false);
+                        rootView.findViewById(R.id.row_quick_start).setVisibility(View.GONE);
+                    }
+
+                    ActivityLauncher.viewQuickStartForResult(getActivity());
+                }
+            });
+
+            updateQuickStartCounter();
+        }
+
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
 
@@ -405,6 +422,27 @@ public class MySiteFragment extends Fragment implements
             focusOnQuickStartRow();
         }
     }
+
+    private void updateQuickStartCounter() {
+        int numberOfTasksCompleted = 0;
+        int totalNumberOfTasks = QuickStartTask.values().length;
+
+        for (QuickStartTask task : QuickStartTask.values()) {
+            if (task == QuickStartTask.CREATE_SITE || mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), task)) {
+                numberOfTasksCompleted++;
+            }
+        }
+
+        mQuickStartCounter.setText(getString(
+                R.string.quick_start_sites_progress, numberOfTasksCompleted, totalNumberOfTasks));
+
+        if (numberOfTasksCompleted == totalNumberOfTasks) {
+            mQuickStartDot.setVisibility(View.VISIBLE);
+        } else {
+            mQuickStartDot.setVisibility(View.GONE);
+        }
+    }
+
 
     private void showAddSiteIconDialog() {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
@@ -980,6 +1018,7 @@ public class MySiteFragment extends Fragment implements
         clearVisualQuickStartIndicators();
         mQuickStartStore.setDoneTask(getSelectedSite().getId(), mActiveQuickStartTask.getTask(), true);
         clearActiveQuickStartTask();
+        updateQuickStartCounter();
     }
 
     private void showActiveQuickStartTutorial() {
