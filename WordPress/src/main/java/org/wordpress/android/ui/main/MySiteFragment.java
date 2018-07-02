@@ -389,6 +389,15 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
+        setupQuickStartRow(rootView);
+
+        mToolbar = rootView.findViewById(R.id.toolbar_main);
+        mToolbar.setTitle(mToolbarTitle);
+
+        return rootView;
+    }
+
+    private void setupQuickStartRow(final View rootView) {
         if (AppPrefs.isQuickStartActive()) {
             rootView.findViewById(R.id.row_quick_start).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.row_quick_start).setOnClickListener(new View.OnClickListener() {
@@ -406,11 +415,6 @@ public class MySiteFragment extends Fragment implements
 
             updateQuickStartCounter();
         }
-
-        mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
-
-        return rootView;
     }
 
 
