@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
     ext.arch_components_version = '1.1.1'
 
     repositories {
@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '51fee5847ca60895772eb5e5e4ca64a275cac543'
+    fluxCVersion = 'c9c6af9c4eae31a39b7456f6ecd0987b546da0f3'
 }
