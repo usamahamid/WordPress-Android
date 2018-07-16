@@ -4,18 +4,17 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -88,16 +87,12 @@ class ActivityLogViewModel @Inject constructor(
     private val rewindAvailableObserver = Observer<Boolean> { isRewindAvailable ->
         if (areActionsEnabled != isRewindAvailable) {
             isRewindAvailable?.let {
-                reloadEvents(!isRewindAvailable)
+                reloadEventsAsync(!isRewindAvailable)
             }
         }
     }
 
     lateinit var site: SiteModel
-
-    init {
-        dispatcher.register(this)
-    }
 
     fun start(site: SiteModel) {
         if (isStarted) {
@@ -112,7 +107,7 @@ class ActivityLogViewModel @Inject constructor(
 
         activityLogStore.getRewindStatusForSite(site)
 
-        reloadEvents()
+        reloadEventsAsync()
         requestEventsUpdate(false)
 
         isStarted = true
@@ -156,18 +151,18 @@ class ActivityLogViewModel @Inject constructor(
     private fun updateRewindState(status: Status?) {
         lastRewindStatus = status
         if (status == RUNNING && !isRewindProgressItemShown) {
-            reloadEvents(true, true)
+            reloadEventsAsync(true, true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
             showRewindFinishedMessage()
         }
     }
 
-    private fun reloadEvents(
+    private fun reloadEventsAsync(
         disableActions: Boolean = areActionsEnabled,
         displayProgressItem: Boolean = isRewindProgressItemShown
-    ) {
-        val eventList = activityLogStore.getActivityLogForSite(site, false)
+    ) = launch(UI) {
+        val eventList = activityLogStore.getActivitiesFromDatabaseAsync(site, false).await()
         val items = ArrayList<ActivityLogListItem>(eventList.map { model ->
             ActivityLogListItem.Event(model, disableActions)
         })
@@ -227,7 +222,29 @@ class ActivityLogViewModel @Inject constructor(
             val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.postValue(newStatus)
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
-            dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
+
+            launch(UI) {
+                val result = activityLogStore.fetchActivitiesAsync(payload)
+                if (result.isError) {
+                    _eventListStatus.postValue(ActivityLogListStatus.ERROR)
+                    AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
+                } else {
+                    var reloadJob: Job? = null
+                    if (result.rowsAffected > 0) {
+                        reloadJob = reloadEventsAsync(!rewindStatusService.isRewindAvailable,
+                                rewindStatusService.isRewindInProgress)
+                        rewindStatusService.requestStatusUpdate()
+                        moveToTop()
+                    }
+
+                    reloadJob?.join()
+                    if (result.canLoadMore) {
+                        _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
+                    } else {
+                        _eventListStatus.postValue(ActivityLogListStatus.DONE)
+                    }
+                }
+            }
         }
     }
 
@@ -260,30 +277,6 @@ class ActivityLogViewModel @Inject constructor(
         } else {
             _showSnackbarMessage.postValue(
                     resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message_no_dates))
-        }
-    }
-
-    // Network Callbacks
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onEventsUpdated(event: OnActivityLogFetched) {
-        if (event.isError) {
-            _eventListStatus.postValue(ActivityLogListStatus.ERROR)
-            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
-            return
-        }
-
-        if (event.rowsAffected > 0) {
-            reloadEvents(!rewindStatusService.isRewindAvailable, rewindStatusService.isRewindInProgress)
-            rewindStatusService.requestStatusUpdate()
-            moveToTop()
-        }
-
-        if (event.canLoadMore) {
-            _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
-        } else {
-            _eventListStatus.postValue(ActivityLogListStatus.DONE)
         }
     }
 }
